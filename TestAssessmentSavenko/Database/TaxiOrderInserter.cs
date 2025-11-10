@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestAssessmentSavenko.Models;
 using static System.Formats.Asn1.AsnWriter;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TestAssessmentSavenko.Database
 {
@@ -58,11 +59,15 @@ namespace TestAssessmentSavenko.Database
             table.Columns.Add("fare_amount", typeof(decimal));
             table.Columns.Add("tip_amount", typeof(decimal));
 
+            //10. (nice to have) The input data is in the EST timezone.
+            //Convert it to UTC when inserting into the DB.
+
+            var estZone = TimeZoneInfo.FindSystemTimeZoneById("EST");
             foreach (var order in entities)
             {
                 table.Rows.Add(
-                    order.tpep_pickup_datetime,
-                    order.tpep_dropoff_datetime,
+                    TimeZoneInfo.ConvertTimeToUtc(order.tpep_pickup_datetime, estZone),
+                    TimeZoneInfo.ConvertTimeToUtc(order.tpep_dropoff_datetime, estZone),
                     order.passenger_count,
                     order.trip_distance,
                     order.store_and_fwd_flag,

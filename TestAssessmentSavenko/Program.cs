@@ -24,6 +24,7 @@ namespace TestAssessmentSavenko
             var parsedData = parser.ParseFile("Resources/sample-cab-data.csv", typeof(TaxiOrderMap));
             var validData = validator.FilterValid(parsedData, true) ?? new List<TaxiOrder>();
             inserter.Insert(validData);
+            Console.WriteLine($"Inserted rows {validData.Count()} to the TaxiOrders table");
         }
     }
 }
